@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chatt.Core\Chatt.Core.csproj" />
+  </ItemGroup>
+
 </Project>

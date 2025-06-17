@@ -9,9 +9,11 @@ internal class Program
 	internal static List<string> History = [];
 	static int scrollOffset = 0; // 新增：滚动偏移量
 	internal static string currentPrompt = ">";
+	internal static string _defaultServer = "localhost";
 
 	static void Main()
 	{
+		Console.CancelKeyPress += Console_CancelKeyPress;
 		AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 		Console.Clear();
 		ShowTitle();
@@ -84,6 +86,7 @@ internal class Program
 						RedrawInputLine(inputBuffer, cursorPos);
 					}
 				}
+				Thread.Sleep(100);
 			}
 
 			string input = inputBuffer.ToString();
@@ -99,6 +102,13 @@ internal class Program
 			new CommandParser().Parse(input);
 			ShowTitle();
 		}
+	}
+
+	private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
+	{
+		History.Add("如果要退出，请在输入quit。");
+		ShowHistoryPanel();
+		e.Cancel = true; // 阻止程序退出
 	}
 
 	private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -176,5 +186,12 @@ internal class Program
 		Console.Write(currentPrompt);
 		Console.Write(buffer.ToString());
 		Console.SetCursorPosition(currentPrompt.Length + cursorPos, height - 1);
+	}
+
+	static void ProgramExit()
+	{
+		History.Add("正在退出。");
+		History.Clear();
+		
 	}
 }
